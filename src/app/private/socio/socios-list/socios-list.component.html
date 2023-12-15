@@ -1,0 +1,16 @@
+<div class="container mx-2 my-4">
+    <div class="row">
+        <div class="col col-lg-6" *ngIf="errorMessage">
+            <h3>{{ errorMessage | async }}</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col col-lg-10">
+            <app-socio-item
+            *ngFor="let socio of socios; let i= index"
+            [socio]="socio"
+            [index]="i"
+            ></app-socio-item>            
+        </div>
+    </div>
+</div>

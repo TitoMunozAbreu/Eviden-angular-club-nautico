@@ -1,0 +1,103 @@
+<div class="row d-flex justify-content-center my-4">
+    <div class="col col-xs-12 col-md-6 col-lg-4">
+        <div class="row  my-2">
+            <!-- alert msg -->
+            <div class="alert alert-danger alert-dismissible fade show" role="alert" *ngIf="error">
+                <strong>{{ error }}</strong> 
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+        <!-- display loading spinner -->
+        <div class="d-flex justify-content-center" *ngIf="isLoading">
+            <app-loading-spinner></app-loading-spinner>
+        </div>
+        <!-- login form -->
+        <form  (ngSubmit)="onSubmit()" #authForm = "ngForm" *ngIf="!isLoading">
+             <!-- firstname -->
+            <div class="form-group" *ngIf="!isLoginMode">
+                <label for="firstname">Firstname</label>
+                <input 
+                    class="form-control"
+                    type="text" 
+                    name="firstname" 
+                    id="firstname"
+                    ngModel
+                    firstname
+                    required
+                    pattern="^[^<>]+$"
+                    #firstname = "ngModel">
+                    <span *ngIf="!firstname.valid && firstname.touched">
+                        <span *ngIf="firstname.errors?.['required']">Enter a firstname</span>
+                        <span *ngIf="firstname.errors?.['pattern']"> Invalid firstname characters</span>
+                    </span>
+            </div>
+            <!-- lastname -->
+            <div class="form-group" *ngIf="!isLoginMode">
+            <label for="firstname">Lastname</label>
+            <input 
+                class="form-control"
+                type="text" 
+                name="lastname" 
+                id="lastname"
+                ngModel
+                lastname
+                required
+                pattern="^[^<>]+$"
+                #lastname = "ngModel">
+                <span *ngIf="!lastname.valid && lastname.touched">
+                    <span *ngIf="lastname.errors?.['required']">Enter a lastname</span>
+                    <span *ngIf="lastname.errors?.['pattern']"> Invalid lastname characters</span>
+                </span>
+            </div>
+            <!-- email -->
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input 
+                    class="form-control"
+                    type="email" 
+                    name="email" 
+                    id="email"
+                    ngModel
+                    email
+                    required
+                    pattern=".*@club-nautico\.com"
+                    #email = "ngModel">
+                    <span *ngIf="!email.valid && email.touched">
+                        <span *ngIf="email.errors?.['required']">Enter a email</span>
+                        <span *ngIf="email.errors?.['pattern']">Enter a valid emai: example@club-nautico.com</span>
+                    </span>
+            </div>
+            <!-- password -->
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input 
+                    class="form-control"
+                    type="password" 
+                    name="password" 
+                    id="password"
+                    ngModel
+                    password
+                    required
+                    minlength="4"
+                    pattern="^[^<>]+$"
+                    #password = "ngModel">
+                    <span *ngIf="!password.valid && password.touched">
+                        <span *ngIf="password.errors?.['required']">Enter a password</span>
+                        <span *ngIf="password.errors?.['minlength']"> Password must be at least 4 digits length</span>
+                        <span *ngIf="password.errors?.['pattern']"> Invalid password characters</span>
+                    </span>
+            </div>
+            
+            <!-- buttons -->
+            <div class="row my-2">
+                <div class="col-auto ">                    
+                    <button [disabled]="!authForm.valid" type="submit" class="btn btn-outline-success">{{ isLoginMode ? 'Login': 'Sign up'}}</button> | 
+                    <button type="button" class="btn btn-outline-primary" (click)="onSwitchMode()"> Switch to {{ isLoginMode ? 'Sign up': 'Login'}}</button>
+                </div>
+            </div>
+        </form>
+
+         <!-- SignUp form -->
+         
+    </div>
+</div>
