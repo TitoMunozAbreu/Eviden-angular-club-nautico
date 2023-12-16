@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, catchError, tap, throwError } from "rxjs";
 import { User } from "./auth/user.model";
+import { Router } from "@angular/router";
 
 /* Interfaz para especificar definir los datos en la respuesta de autenticacion */
 export interface AuthDataResponse {
@@ -15,10 +16,11 @@ export interface AuthDataResponse {
 export class AuthService {
     baseURL = 'http://localhost:8080/api/v2/auth'
     //usuario que iniciará la sesión
-    user = new BehaviorSubject<User>(null as unknown as User)
+    user = new BehaviorSubject<User|null>(null)
 
 
-    constructor(private http: HttpClient){}
+    constructor(private http: HttpClient,
+                private route: Router){}
     
     //metodo para el inicio de sesion
     login(email: string, password: string){
@@ -64,7 +66,32 @@ export class AuthService {
                                     }))
     }
 
+    logout(){
+        this.user.next(null)
+        this.route.navigate(['/auth'])
+        localStorage.removeItem('userData')
+    }
+
     autoLogin(){
+        //extraer datos del local storage 
+        const userDataString = localStorage.getItem('userData')
+        let loadedUser: User
+        if(userDataString !== null){            
+            //cast to JSON.paser
+            const userData: {email: string,
+                _token: string,
+                role: string,
+                expiresIn: number} = JSON.parse(userDataString)
+            loadedUser = new User(userData.email, userData._token, userData.role, userData.expiresIn)
+        }else{
+            return 
+        }
+        //TODO CHECK la fecha de expiracion del token
+        
+        this.user.next(loadedUser)
+
+
+  
         
     }
 
@@ -86,9 +113,9 @@ export class AuthService {
                         role: string,
                         expiresIn: number) {
 
-        const user = new User(email, token, role, expiresIn)
-        this.user.next(user)
-        localStorage.setItem('userData', JSON.stringify(user))
+        const newUser = new User(email, token, role, expiresIn)
+        this.user.next(newUser)
+        localStorage.setItem('userData', JSON.stringify(newUser))
 
     }
         

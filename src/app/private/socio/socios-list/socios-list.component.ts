@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Socio } from '../../socio';
 import { SocioService } from '../../socio.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-socios-list',
@@ -25,6 +26,8 @@ export class SociosListComponent implements OnInit{
       }
     )
   }
+
+
 
 
 

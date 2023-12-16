@@ -5,6 +5,7 @@ import { AuthComponent } from './auth/auth/auth.component';
 import { SocioGuard } from './private/socio-guard.service';
 import { socioResolver } from './private/socio-resolve.service';
 import { SocioDetailComponent } from './private/socio/socio-detail/socio-detail.component';
+import { SocioEditComponent } from './private/socio/socio-edit/socio-edit.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'socios', pathMatch: 'full' },
@@ -12,7 +13,9 @@ const routes: Routes = [
   { path: 'socios', component: SocioComponent,resolve: [socioResolver], canActivate: [SocioGuard],
     children:
       [
-        { path: ':id', component: SocioDetailComponent}
+        { path: 'crear', component: SocioEditComponent},
+        { path: ':id', component: SocioDetailComponent},
+        { path: ':id/editar', component: SocioEditComponent},
       ]
   }
 ];

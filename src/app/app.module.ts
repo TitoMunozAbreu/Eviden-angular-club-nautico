@@ -15,6 +15,7 @@ import { AuthComponent } from './auth/auth/auth.component';
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
 import { FormsModule } from '@angular/forms';
 import { AuthInterceptor } from './auth/auth/auth-interceptor.service';
+import { SocioEditComponent } from './private/socio/socio-edit/socio-edit.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { AuthInterceptor } from './auth/auth/auth-interceptor.service';
     SocioDetailComponent,
     CapitalLetterPipe,
     AuthComponent,
-    LoadingSpinnerComponent
+    LoadingSpinnerComponent,
+    SocioEditComponent
   ],
   imports: [
     BrowserModule,
