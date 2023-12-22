@@ -1,13 +1,27 @@
+<!-- mensaje -->
+<p-toast></p-toast>
 <div class="container mx-2 my-4">
-    <div class="row">
+    <div class="row d-flex justify-content-between">
         <div class="col col-lg-4 my-2">
+            <!-- boton crear socio -->
             <button
-                type="button"
-                data-bs-toggle="modal" data-bs-target="#exampleModal"
-                [routerLink]="['crear']"
-                class="btn btn-outline-success bg-success-subtle">Crear socio</button>
+                (click)="onCrearSocioModal()"
+                type="button"                
+                class="btn btn-outline-success bg-success-subtle"><i class="pi pi-user-plus"></i> Crear socio</button>
+        </div>
+        <div class="col col-lg-6">
+            <!-- buscar socio por nombre -->
+            <span class="p-input-icon-left">
+                <i class="pi pi-search"></i>
+                <input 
+                type="text" 
+                placeholder="Buscar socio" 
+                pInputText class="p-inputtext-sm"
+                (keyup)="buscarSocio($event)"/>
+            </span>
         </div>
     </div>
+    <hr class="col col-lg-10">
     <div class="row">
         <div class="col col-lg-6" *ngIf="errorMessage">
             <h3>{{ errorMessage | async }}</h3>
@@ -16,10 +30,12 @@
     <div class="row">
         <div class="col col-lg-10">
             <app-socio-item
-            *ngFor="let socio of socios; let i= index"
-            [socio]="socio"
-            [index]="i"
-            ></app-socio-item>            
+                *ngFor="let socio of socios"
+                [socio]="socio"
+                [index]="socio.id"            
+            ></app-socio-item>          
+          
+            <p-paginator (onPageChange)="onPageChange($event)" [first]="offset" [rows]="numberOfElements" [totalRecords]="totalElements"></p-paginator>
         </div>
     </div>
 </div>

@@ -1,18 +1,190 @@
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<!-- formulario crear/editar socio -->
+<form [formGroup]="socioForm" (ngSubmit)="onSubmit()">
+  <div class="row">
+    <div class="col col-lg-6">
+       <!-- nombre -->
+    <div class="my-2">
+      <input 
+        class="form-control" 
+        placeholder="Nombre" 
+        type="text"
+        id="nombre" 
+        formControlName="nombre"
+      />
+      <span *ngIf="!socioForm.get('nombre')?.valid && socioForm.get('nombre')?.touched">
+        <span *ngIf="socioForm.get('nombre')?.errors?.['required']">Ingresar nombre</span>
+        <span *ngIf="socioForm.get('nombre')?.errors?.['pattern']">Caracteres invalidos</span>
+      </span>      
+    </div>
+    </div>
+    <div class="col col-lg-6">
+      <!-- apellidos -->
+      <div class="my-2">
+        <input 
+          class="form-control" 
+          placeholder="Apellidos" 
+          type="text"
+          id="apellidos" 
+          formControlName="apellidos"
+        />
+        <span *ngIf="!socioForm.get('apellidos')?.valid && socioForm.get('apellidos')?.touched">
+          <span *ngIf="socioForm.get('apellidos')?.errors?.['required']">Ingresar apellidos</span>
+          <span *ngIf="socioForm.get('apellidos')?.errors?.['pattern']">Caracteres invalidos</span>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col col-lg-6" *ngIf="!editMode">
+      <!-- DniNie -->
+      <div class="my-2">
+        <input 
+          class="form-control" 
+          placeholder="DNI / NIE" 
+          type="text"
+          id="dniNie" 
+          formControlName="dniNie"
+        />
+        <span *ngIf="!socioForm.get('dniNie')?.valid && socioForm.get('dniNie')?.touched">
+          <span *ngIf="socioForm.get('dniNie')?.errors?.['required']">Ingresar Dni/Nie</span>
+          <span *ngIf="socioForm.get('dniNie')?.errors?.['pattern']">Dni/Nie invalido</span>
+          <span *ngIf="socioForm.get('dniNie')?.errors?.['existeDniNie']">Dni/Nie existe</span>
+        </span>
+      </div>
+    </div>
+    <div class="col col-lg-6">
+      <!-- movil -->
+      <div class="my-2">
+        <input 
+          class="form-control" 
+          placeholder="Movil" 
+          type="number"
+          id="movil" 
+          formControlName="movil"
+        />
+        <span *ngIf="!socioForm.get('movil')?.valid && socioForm.get('movil')?.touched">
+          <span *ngIf="socioForm.get('movil')?.errors?.['required']">Ingresar movil</span>
+          <span *ngIf="socioForm.get('movil')?.errors?.['pattern']">Ingresar 9 digitos</span>
+        </span>
+      </div>    
+    </div>
+  </div>
+  <div class="row">
+    <div class="col col-lg-6">
+      <!-- email -->
+      <div class="my-2">
+        <input 
+          class="form-control" 
+          placeholder="Email" 
+          type="email"
+          id="email" 
+          formControlName="email"
+        />
+        <span *ngIf="!socioForm.get('email')?.valid && socioForm.get('email')?.touched">
+          <span *ngIf="socioForm.get('email')?.errors?.['required']">Ingresar email</span>
+          <span *ngIf="socioForm.get('email')?.errors?.['pattern']">Email invalido</span>
+          <span *ngIf="socioForm.get('email')?.errors?.['existeEmail']">Email existe</span>
+        </span>
+      </div>
+    </div>
+    <div class="col col-lg-6" *ngIf="!editMode">
+      <!-- Barcos -->      
+      <div class="my-2">
+        <button type="button" class="btn btn-outline-info bg-info-subtle"(click)="addBarco()"><i class="pi pi-plus"></i> Añadir barco</button>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div formArrayName="barcos">
+
+      <div 
+        *ngFor="let control of controls; let i= index"
+        [formGroupName]="i">
+        <hr>
+        <div class="d-flex justify-content-end">
+          <button                                    
+          (click)="eliminarBarco(i)"
+          type="button" 
+          class="btn btn-sm btn-outline-danger bg.danger-subtle btnx">X</button>
+        </div>        
+        <div class="row">
+          <div class="col col-lg-6">
+            <!-- numeroMatricula -->
+            <div class="my-2">
+              <input 
+                class="form-control" 
+                placeholder="Numero matricula" 
+                type="numeroMatricula"
+                id="numeroMatricula" 
+                formControlName="numeroMatricula"
+              />
+              <span *ngIf="validarBarco('numeroMatricula',i)">
+                <span *ngIf="validarCampoBarcoRequired('numeroMatricula',i)">Ingresar numero matricula</span>
+              </span>
+            </div>            
+          </div>
+          <div class="col col-lg-6">
+            <!-- nombre -->
+            <div class="my-2">
+              <input 
+                class="form-control" 
+                placeholder="Nombre" 
+                type="nombre"
+                id="nombre" 
+                formControlName="nombre"
+              />
+              <span *ngIf="validarBarco('nombre',i)">
+                <span *ngIf="validarCampoBarcoRequired('nombre',i)">Ingresar nombre</span>
+                <span *ngIf="validarCampoBarcoPattern('nombre',i)">Caracteres invalidos</span>
+              </span>
+            </div>
+          </div>
         </div>
-        <div class="modal-body">
-          ...
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
+        <div class="row">
+          <div class="col col-lg-6">
+            <!-- numeroAmarre -->
+            <div class="my-2">
+              <input 
+                class="form-control" 
+                placeholder="Numero amarre" 
+                type="numeroAmarre"
+                id="numeroAmarre" 
+                formControlName="numeroAmarre"
+              />
+              <span *ngIf="validarBarco('numeroAmarre',i)">
+                <span *ngIf="validarCampoBarcoRequired('numeroAmarre',i)">Ingresar numero amarre</span>
+                <span *ngIf="validarCampoBarcoPattern('numeroAmarre',i)">3 digitos para el amarre</span>
+              </span>
+            </div>
+          </div>
+          <div class="col col-lg-6">
+            <!-- cuotaPago -->
+            <div class="my-2">
+              <input 
+                class="form-control" 
+                placeholder="Cuota pago" 
+                type="cuotaPago"
+                id="cuotaPago" 
+                formControlName="cuotaPago"
+              />
+              <span *ngIf="validarBarco('cuotaPago',i)">
+                <span *ngIf="validarCampoBarcoRequired('cuotaPago',i)">Ingresar cuota pago</span>
+                <span *ngIf="validarCampoBarcoPattern('cuotaPago',i)">Caracteres invalidos</span>
+              </span>
+            </div>
+          </div>
+
+        
         </div>
       </div>
     </div>
   </div>
+  <div class="row my-2">
+    <div class="col">
+      <button type="submit" class="btn btn-outline-success bg-success-subtle mx-2" >{{ editMode ? 'Editar': 'Crear'}}</button> |
+      <button type="button" class="btn btn-outline-danger bg-danger-subtle mx-2"  (click)="cerrarModal()">Cancelar</button>
+    </div>
+
+  </div>    
+
+  </form>

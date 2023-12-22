@@ -1,1 +1,82 @@
-<p>socio detail</p>
+<!-- mensaje -->
+<p-toast key="info"></p-toast>
+<div class="card d-flex justify-content-center">
+    <p-toast position="center" key="confirm" (onClose)="onReject()" [baseZIndex]="5000">
+        <ng-template let-message pTemplate="message">
+            <div class="flex flex-column align-items-start" style="flex: 1">           
+                <div class="font-medium text-lg my-3 text-900">{{ message.summary }}</div>
+                <p-button class="p-button-sm"  severity="danger" label="Eliminar" (click)="eliminarSocio()"></p-button>
+            </div>
+        </ng-template>
+    </p-toast>
+</div>
+
+<!-- datos del socio -->
+<div class="row" *ngIf="socio">
+    <div class="col col-lg-11">
+        <div class="card border-light mb-3 my-4">
+            <div class="card-header">
+                <div class="row my-2">
+                    <div class="col-col-lg-2 d-flex justify-content-end">
+                        <i (click)="editarSocio()" class="pi pi-user-edit mx-2" style="color: blue;font-size: 1.5rem"></i>
+                        <i pRipple (click)="showConfirm()" class="pi pi-trash mx-2" style="color: red; font-size: 1.5rem"></i>
+                    </div>
+                </div>
+                <div class="row">                   
+                    <div class="col col-lg-2">
+                        <i class="pi pi-user" style="font-size: 3rem;"></i>
+                    </div>  
+                    <div class="col col-lg-5 d-flex align-items-center">
+                        <h3 class="nombre-apellido" style="color: rgb(208, 117, 5);">{{ socio.nombre ? (socio.nombre | capitalLetter) : '' }} {{ socio.apellidos ? (socio.apellidos | capitalLetter) : '' }}</h3>
+                    </div>         
+                </div>
+                      
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">Info</h5>              
+                <div class="row">
+                    <p class="card-text">
+                        Movil: {{ socio.movil }} <br>
+                        Email: {{ socio.email }} <br>
+                    </p>
+                </div>
+                <hr>
+                <div class="row" *ngIf="socio.barcos ? (socio.barcos.length >= 1): false">
+                    <h5>Barcos</h5>
+                    <div *ngFor="let barco of socio.barcos; let i= index">
+                        <div class="accordion accordion-flush my-2" id="accordionExample">
+                            <div class="accordion-item">
+                              <h2 class="accordion-header">
+                                <button class="accordion-button bg-warning-subtle" style="color: rgb(220, 197, 168);"  type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                  {{ barco.nombre }}
+                                </button>
+                              </h2>
+                              <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col col-lg-12">
+                                            Numero matricula: {{ barco.numeroMatricula }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col col-lg-12">
+                                            Numero amarre: {{ barco.numeroAmarre }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col col-lg-12">
+                                            Cuota pago: {{ barco.cuotaPago | currency:'EUR' }}
+                                        </div>
+                                    </div>
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+    </div>
+</div>
+
+

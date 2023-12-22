@@ -4,11 +4,13 @@ import { AuthDataResponse, AuthService } from '../auth.service';
 import { Observable } from 'rxjs';
 import { __values } from 'tslib';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.component.html',
-  styleUrls: ['./auth.component.scss']
+  styleUrls: ['./auth.component.scss'],
+  providers: [MessageService]
 })
 export class AuthComponent {
 // formulario de autenticacion
@@ -18,7 +20,8 @@ export class AuthComponent {
   isLoginMode = true
 
   constructor(private authService: AuthService,
-              private router: Router){}
+              private router: Router,
+              private messageService: MessageService){}
 
   // metodo para Login o Sign up
   onSubmit(){
@@ -45,7 +48,7 @@ export class AuthComponent {
         this.isLoading = false
       },
       error: errorMesagge => {
-        this.error = errorMesagge;
+        this.showError(errorMesagge)
         this.isLoading = false     
       }
     })
@@ -57,6 +60,10 @@ export class AuthComponent {
   onSwitchMode(){
     this.isLoginMode = !this.isLoginMode
   }
+
+  showError(errorMessage: string) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: errorMessage });
+}
 
   
 

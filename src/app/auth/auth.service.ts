@@ -17,7 +17,8 @@ export class AuthService {
     baseURL = 'http://localhost:8080/api/v2/auth'
     //usuario que iniciará la sesión
     user = new BehaviorSubject<User|null>(null)
-
+    //almacena el contador del autoLogut()
+    private tokenExpirationTimer: any
 
     constructor(private http: HttpClient,
                 private route: Router){}
@@ -39,7 +40,7 @@ export class AuthService {
                                     email,
                                     authData.token,
                                     authData.role,
-                                    +authData.expiresIn
+                                    authData.expiresIn
                                 )
                             }))
     }
@@ -61,38 +62,70 @@ export class AuthService {
                                             email,
                                             authData.token,
                                             authData.role,
-                                            +authData.expiresIn
+                                            authData.expiresIn
                                         )
                                     }))
     }
 
+    //metodo para el logout
     logout(){
+        //pasar el usuario registrado a null
         this.user.next(null)
         this.route.navigate(['/auth'])
+        //eliminar el usuario almacenado en el localStorage
         localStorage.removeItem('userData')
+        //comprobar si existe el contador del autoLogut()
+        if(this.tokenExpirationTimer){
+            clearTimeout(this.tokenExpirationTimer)
+        }
+        this.tokenExpirationTimer = null
+       
     }
 
+    //metodo para realizar el auto Login
     autoLogin(){
-        //extraer datos del local storage 
+        //extraer el usuario del local storage 
         const userDataString = localStorage.getItem('userData')
+
+        let tokenExpirationDate: Date
         let loadedUser: User
+        //comprobar si es diferente de nulo
         if(userDataString !== null){            
-            //cast to JSON.paser
-            const userData: {email: string,
+            //casting a object
+            const userData: {
+                email: string,
                 _token: string,
                 role: string,
-                expiresIn: number} = JSON.parse(userDataString)
-            loadedUser = new User(userData.email, userData._token, userData.role, userData.expiresIn)
+                _tokenExpirationDate: string} = JSON.parse(userDataString)
+            //almacenar la fecha de expiracion del token
+            tokenExpirationDate = new Date(userData._tokenExpirationDate)
+            //inicializar el usuario con los datos de userData
+            loadedUser = new User(userData.email, userData._token, userData.role, new Date(userData._tokenExpirationDate))
+      
         }else{
             return 
         }
-        //TODO CHECK la fecha de expiracion del token
-        
-        this.user.next(loadedUser)
+        //comprobar validez del token
+        if(loadedUser.token){
+            //subscribir el usuario
+            this.user.next(loadedUser)
+            //calcular la fecha de expiracion restante del token
+            const date = new Date()
+            const expirationDuration = (tokenExpirationDate.getTime()-3600000) - date.getTime()
+            this.autoLogout(expirationDuration)
+        }
 
+    }
 
+    //metodo para el autoLogout
+    autoLogout(expirationDuration: number){        
+        console.log(expirationDuration);             
+        // Establecer un temporizador
+      this.tokenExpirationTimer =  setTimeout(() => {
+            this.logout();
+        }, expirationDuration)       
   
-        
+         
     }
 
     //metodo para controlar los errores
@@ -111,10 +144,21 @@ export class AuthService {
     handleAuthentication(email: string,
                         token: string,
                         role: string,
-                        expiresIn: number) {
-
-        const newUser = new User(email, token, role, expiresIn)
+                        expiresIn: string) {
+        //fecha actual
+        const date = new Date()                            
+        //tiempo de expiracion
+        const expirationDate = new Date(expiresIn)
+        //tiempo restante
+        const remainTime = expirationDate.getTime() - date.getTime()
+        //inicializar el usuario autenticado
+        const newUser = new User(email, token, role, new Date(expiresIn + 'Z'))   
+        console.log(newUser);
+        //subscribir el usuario 
         this.user.next(newUser)
+        //iniciar el autoLogout
+        this.autoLogout(remainTime)    
+        //almacenar el usuario en el localStorage
         localStorage.setItem('userData', JSON.stringify(newUser))
 
     }

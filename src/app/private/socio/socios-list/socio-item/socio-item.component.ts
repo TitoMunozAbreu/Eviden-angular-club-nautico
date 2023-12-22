@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { Socio } from 'src/app/private/socio';
+import { Component, Input, OnInit } from '@angular/core';
+import { Socio } from 'src/app/private/model/socio';
 
 @Component({
   selector: 'app-socio-item',
@@ -7,7 +7,7 @@ import { Socio } from 'src/app/private/socio';
   styleUrls: ['./socio-item.component.scss']
 })
 export class SocioItemComponent {
-  @Input() socio!: Socio
+  @Input() socio!: any
   @Input() index!: any
-
+  
 }
