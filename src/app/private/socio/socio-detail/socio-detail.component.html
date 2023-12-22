@@ -48,14 +48,14 @@
                             <div class="accordion-item">
                               <h2 class="accordion-header">
                                 <button class="accordion-button bg-warning-subtle" style="color: rgb(220, 197, 168);"  type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                  {{ barco.nombre }}
+                                  {{ barco.nombre | capitalLetter }}
                                 </button>
                               </h2>
                               <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
                                     <div class="row">
                                         <div class="col col-lg-12">
-                                            Numero matricula: {{ barco.numeroMatricula }}
+                                            Numero matricula: {{ barco.numeroMatricula |capitalLetter }}
                                         </div>
                                     </div>
                                     <div class="row">
