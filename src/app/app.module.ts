@@ -6,8 +6,8 @@ import { ButtonModule } from 'primeng/button';
 import { DialogService, DynamicDialogConfig, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { PaginatorModule } from 'primeng/paginator';
 import { InputTextModule } from 'primeng/inputtext';
-import { NgxPaginationModule } from 'ngx-pagination';
 import { ToastModule } from 'primeng/toast';
+import { MessagesModule } from 'primeng/messages';
 
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http'
 
@@ -48,7 +48,7 @@ import { PageNotFoundComponent } from './public/page-not-found/page-not-found.co
     DialogModule,
     DynamicDialogModule,
     ButtonModule,
-    NgxPaginationModule,
+    MessagesModule,
     PaginatorModule,
     InputTextModule,
     ToastModule,

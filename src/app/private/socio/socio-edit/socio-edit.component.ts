@@ -7,16 +7,19 @@ import { SocioService } from '../../socio.service';
 import { Barco } from '../../model/barco';
 import { Socio } from '../../model/socio';
 import { BarcoService } from '../../service/barco.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-socio-edit',
   templateUrl: './socio-edit.component.html',
-  styleUrls: ['./socio-edit.component.scss']
+  styleUrls: ['./socio-edit.component.scss'],
+  providers: [MessageService]
 })
 export class SocioEditComponent implements OnInit {
   socioForm!: FormGroup;
   editMode = false
   socio!: Socio
+  errorMsj !: string
 
 
   constructor(
@@ -24,7 +27,8 @@ export class SocioEditComponent implements OnInit {
     private ref: DynamicDialogRef,
     private config: DynamicDialogConfig,
     private socioService: SocioService,
-    private barcoService: BarcoService
+    private barcoService: BarcoService,
+    private messageService: MessageService
   ) {}
   
   ngOnInit(): void {
@@ -115,7 +119,8 @@ export class SocioEditComponent implements OnInit {
           //comprobar si existen barcos
           if(barco){
             //enviar actualizacion del barco al backend
-            this.barcoService.actualizarBarco(barco.id, 
+            this.barcoService.actualizarBarco(
+              barco.id, 
               barco.numeroMatricula, 
               barco.nombre, 
               barco.numeroAmarre, 
@@ -123,7 +128,7 @@ export class SocioEditComponent implements OnInit {
                 next: response => {
                   console.log(response);        
                 },error: errorResp => {
-                  console.log(errorResp);
+                  this.errorMsj = errorResp
                   
                 }
               })
@@ -134,7 +139,7 @@ export class SocioEditComponent implements OnInit {
           msj: msjSocioActualizado
         })    
       },error: errorResp => {
-        console.log(errorResp);        
+        this.errorMsj = errorResp
       }
     })
   
@@ -168,8 +173,8 @@ export class SocioEditComponent implements OnInit {
           msj: msjSocioCreado
         })
       },
-      error: respError => {
-        console.log(respError)
+      error: errorResp => {
+        this.errorMsj = errorResp
         
       }
     })
@@ -256,6 +261,11 @@ export class SocioEditComponent implements OnInit {
   /* metodo devuelve la lista de barcos */
   get controls(){
     return (this.socioForm.get('barcos') as FormArray).controls
+  }
+
+  //metodo para mostrar el toast
+  showError(errorMensaje: string) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: errorMensaje });
   }
 
 }

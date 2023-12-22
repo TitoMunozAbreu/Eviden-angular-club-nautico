@@ -1,6 +1,12 @@
+<!-- mensaje -->
+<p-toast key="info"></p-toast>
 <!-- formulario crear/editar socio -->
 <form [formGroup]="socioForm" (ngSubmit)="onSubmit()">
   <div class="row">
+    <div class="alert alert-danger alert-dismissible fade show" role="alert" *ngIf="errorMsj">
+      <span>{{ errorMsj }}</span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
     <div class="col col-lg-6">
        <!-- nombre -->
     <div class="my-2">
@@ -181,7 +187,7 @@
   </div>
   <div class="row my-2">
     <div class="col">
-      <button type="submit" class="btn btn-outline-success bg-success-subtle mx-2" >{{ editMode ? 'Editar': 'Crear'}}</button> |
+      <button type="submit" class="btn btn-outline-success bg-success-subtle mx-2">{{ editMode ? 'Editar': 'Crear'}}</button> |
       <button type="button" class="btn btn-outline-danger bg-danger-subtle mx-2"  (click)="cerrarModal()">Cancelar</button>
     </div>
 
